@@ -1,0 +1,2 @@
+# F.R.I.D.A.Y
+F.R.I.D.A.Y. (or Financial Resource Intelligence &amp; Digital Asset Yielder)
