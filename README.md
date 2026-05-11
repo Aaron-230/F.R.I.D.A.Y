@@ -18,7 +18,8 @@ an AI Machine where you can ask it any question based on financial terms.
 
 ### 🎮 Demo
 
-![enter image description here]()
+![enter image description here](https://github.com/Aaron-230/F.R.I.D.A.Y/blob/main/images/Screen-Recording.gif)
+![enter image description here](https://github.com/Aaron-230/F.R.I.D.A.Y/blob/main/images/image.png)
 
 [Demo Link!!!](https://horizons.hackclub.com/app/projects/1705)
 
