@@ -1,11 +1,13 @@
 from flask import Flask, render_template, request, jsonify
 from google import genai
 from google.genai import types
+import os
 import markdown as MD
 
-API_KEY = "AIzaSyBOGaQ_kSv4e67-Ylc2gmCsyamVr8NutHY"
 with open('System.txt', 'r') as file:
     System = file.read()
+
+API_KEY = os.environ.get("API_KEY")
 
 Client = genai.Client(api_key=API_KEY)
 SearchTool = types.Tool(google_search=types.GoogleSearch())
