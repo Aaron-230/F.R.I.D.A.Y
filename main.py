@@ -29,4 +29,4 @@ def ask():
     return jsonify({'response': Message})
 
 if __name__ == '__main__':
-    Web.run()
+    Web.run(host="0.0.0.0", port=5000)
