@@ -1,27 +1,32 @@
-from google import genai as Gemini
+from flask import Flask, render_template, request, jsonify
+from google import genai
 from google.genai import types
-import sys
-import googlefinance as Finance
+import markdown as MD
 
-with open("System.txt", "r") as file:
-    SystemInstructions = file.read()
+API_KEY = "AIzaSyBOGaQ_kSv4e67-Ylc2gmCsyamVr8NutHY"
+with open('System.txt', 'r') as file:
+    System = file.read()
 
-def Shutdown():
-    print("Shutting down...")
-    sys.exit()
+Client = genai.Client(api_key=API_KEY)
+SearchTool = types.Tool(google_search=types.GoogleSearch())
+Configuration = types.GenerateContentConfig(tools=[SearchTool], system_instruction=System)
 
-def getMarketData(stock):
-    data = Finance.get_stock_data(stock)
-    return data
+Web = Flask(__name__)
 
-AI = Gemini.Client(api_key="AIzaSyBOGaQ_kSv4e67-Ylc2gmCsyamVr8NutHY")
-Search = types.Tool(google_search=types.GoogleSearch())
-Config = types.GenerateContentConfig(tools=[Search], system_instruction=SystemInstructions)
+def Response(Message):
+    response = Client.models.generate_content(model="gemini-2.5-flash", config=Configuration, contents=[Message])
+    return MD.markdown(response.text)
 
-def Response(content):
-    response = AI.models.generate_content(model="gemini-2.5-flash", contents=content, config=Config)
-    return response.text
+@Web.route('/')
+def index():
+    return render_template('index.html')
 
-while True:
-    Input = input("User: ")
-    print("F.R.I.D.A.Y.: " + Response(Input))
+@Web.route('/ask', methods=['POST'])
+def ask():
+    data = request.get_json()
+    UserMessage = data.get('message')
+    Message = Response(UserMessage)
+    return jsonify({'response': Message})
+
+if __name__ == '__main__':
+    Web.run()

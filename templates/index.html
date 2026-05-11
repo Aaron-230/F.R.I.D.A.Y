@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>F.R.I.D.A.Y. USER INTERFACE</title>
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --terminal-blue: #00d4ff;
+            --terminal-glow: rgba(0, 212, 255, 0.5);
+            --bg-color: #000810;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--bg-color);
+            color: var(--terminal-blue);
+            font-family: 'VT323', monospace;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        #CRT-Monitor {
+            width: 95vw;
+            height: 90vh;
+            position: relative;
+            background: #00121a;
+            border: 20px solid #1a1a1a;
+            box-shadow: 0 0 100px rgba(0, 0, 0, 0.8), inset 0 0 60px #000;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            animation: flicker 0.15s infinite;
+        }
+
+        #CRT-Monitor::after {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.15) 50%),
+                linear-gradient(90deg, rgba(255, 0, 0, 0.05), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.05));
+            background-size: 100% 3px, 3px 100%;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        #Terminal {
+            flex-grow: 1;
+            overflow-y: auto;
+            margin-bottom: 10px;
+            scrollbar-width: none;
+        }
+
+        #Terminal::-webkit-scrollbar {
+            display: none;
+        }
+
+        .Line {
+            font-size: 1.6rem;
+            margin: 4px 0;
+            text-shadow: 0 0 8px var(--terminal-glow);
+            letter-spacing: 1px;
+        }
+
+        .InputWrap {
+            display: flex;
+            align-items: center;
+            border-top: 2px solid var(--terminal-blue);
+            padding-top: 15px;
+            z-index: 5;
+        }
+
+        .Prompt {
+            font-size: 1.6rem;
+            margin-right: 10px;
+            text-shadow: 0 0 8px var(--terminal-glow);
+        }
+
+        #UserInput {
+            background: transparent;
+            border: none;
+            color: var(--terminal-blue);
+            font-family: inherit;
+            font-size: 1.6rem;
+            width: 100%;
+            outline: none;
+            text-shadow: 0 0 8px var(--terminal-glow);
+            caret-shape: block;
+            caret-color: var(--terminal-blue);
+        }
+
+        @keyframes flicker {
+            0% {
+                opacity: 0.98;
+            }
+
+            5% {
+                opacity: 0.95;
+            }
+
+            10% {
+                opacity: 0.99;
+            }
+
+            100% {
+                opacity: 0.98;
+            }
+        }
+
+        #UserInput {
+            animation: blink-caret 1s steps(2, start) infinite;
+        }
+
+        @keyframes blink-caret {
+
+            from,
+            to {
+                caret-color: transparent;
+            }
+
+            50% {
+                caret-color: var(--terminal-blue);
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div id="CRT-Monitor">
+    <div id="Terminal">
+        <div class="Line">[SYSTEM INITIALIZED]</div>
+        <div class="Line">[RUNNING ARTIFICIAL INTELLIGENCE ON CLOUD]</div>
+        <div class="Line">F.R.I.D.A.Y. ALPHA v0.1 OPERATIONAL...</div>
+        <div class="Line">--------------------------------------------</div>
+        <div id="Log"></div>
+    </div>
+    
+    <div class="InputWrap">
+        <span class="Prompt">>&nbsp;</span>
+        <input type="text" id="UserInput" autofocus autocomplete="off">
+    </div>
+</div>
+
+<script>
+    const input = document.getElementById('UserInput');
+    const log = document.getElementById('Log');
+    const term = document.getElementById('Terminal');
+
+    document.addEventListener('click', () => input.focus());
+
+    input.addEventListener('keypress', async (e) => {
+        if (e.key === 'Enter') {
+            const val = input.value.trim();
+            if (!val) return;
+
+            input.value = '';
+            
+            const userDiv = document.createElement('div');
+            userDiv.className = 'Line';
+            userDiv.innerHTML = `<span style="color: #fff;">USER:</span> ${val}`;
+            log.appendChild(userDiv);
+            
+            term.scrollTop = term.scrollHeight;
+
+            try {
+                const response = await fetch('/ask', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({message: val})
+                });
+                const data = await response.json();
+                
+                const aiDiv = document.createElement('div');
+                aiDiv.className = 'Line';
+                aiDiv.innerHTML = `<span style="color: #3434eb;">F.R.I.D.A.Y.:</span> ${data.response}`;
+                log.appendChild(aiDiv);
+                
+                term.scrollTop = term.scrollHeight;
+            } catch (err) {
+                log.innerHTML += `<div class="Line" style="color: #ff4444;">[CRITICAL ERROR: UPLINK LOST]</div>`;
+            }
+        }
+    });
+</script>
+
+</body>
+</html>
