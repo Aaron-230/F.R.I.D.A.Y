@@ -13,6 +13,8 @@ F.R.I.D.A.Y. (or Financial Resource Intelligence & Digital Asset Yielder) is an 
 
 This will help the AI Model give to better data to understand your queries. You can chat with the AI Model right now using the Link in the Demo Section.
 
+I have also implemented a Memory Bank System in order to remember the current conversation till you chat with it.
+
 ## 🛠️ Built With
 
 **Language:** [Python 3.14 or newer](https://www.python.org/downloads/)
