@@ -2,6 +2,7 @@
 # F.R.I.D.A.Y.
 
 F.R.I.D.A.Y. (or Financial Resource Intelligence & Digital Asset Yielder) is an AI Model which can help you in your finanical assistance and needs with the help of Gemini.
+I have used AI in the Project for the Chatting with the user but it is not used in the README and in any other parts as well.
 
 ## 🚀 About the Project
 
