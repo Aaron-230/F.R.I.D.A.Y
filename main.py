@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, session
 from google import genai
 from google.genai import types
 import os
@@ -13,11 +13,17 @@ Client = genai.Client(api_key=API_KEY)
 SearchTool = types.Tool(google_search=types.GoogleSearch())
 Configuration = types.GenerateContentConfig(tools=[SearchTool], system_instruction=System)
 
+ChatHistory = []
+
 Web = Flask(__name__)
 
 def Response(Message):
-    response = Client.models.generate_content(model="gemini-2.5-flash", config=Configuration, contents=[Message])
-    return MD.markdown(response.text)
+    global ChatHistory
+
+    AI = Client.chats.create(model="gemini-2.5-flash", config=Configuration, history=ChatHistory)
+    Response = AI.send_message(Message)
+    ChatHistory = AI.get_history()
+    return MD.markdown(Response.text)
 
 @Web.route('/')
 def index():
