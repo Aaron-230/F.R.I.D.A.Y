@@ -44,9 +44,8 @@ Here is a Live Demo Link and a GIF to show the project.
 >[!IMPORTANT]
 >Make sure that you are in the Cloned Repository Folder and not on the main user folder.
 
-## Contributing
-
 Feel free to contribute to the project and add new and great feature. Any contributions you make are **greatly appreciated**.
+Here is how to contribute to the project!
 
 1.  **Fork** the Project.
 2.  Create your **Feature Branch** (`git checkout -b feature/AmazingFeature`).
